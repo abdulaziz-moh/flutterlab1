@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'login_screen.dart';
+import 'package:flutter_lab_1/screens/google_sign_in.dart';
+import 'package:flutter_lab_1/screens/home_screen.dart';
+import 'package:flutter_lab_1/screens/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -10,16 +13,33 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
   @override
   void initState() {
     super.initState();
 
-    // Navigate to HomeScreen after 2 seconds
     Timer(const Duration(seconds: 2), () {
-      Navigator.pushReplacement(
+      
+      final user = FirebaseAuth.instance.currentUser;
+
+      if (!mounted) return;
+
+      if (user != null) {
+        // ✅ User already logged in
+       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const LoginScreen()),
+        // for testing purpose
+        // MaterialPageRoute(builder: (_) => const GoogleSignInPage()),
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
       );
+
+      } else {
+        // ❌ Not logged in
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const GoogleSignInPage()),
+        );
+      }
     });
   }
 
