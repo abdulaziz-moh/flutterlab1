@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lab_1/screens/home_screen.dart';
+import 'package:flutter_lab_1/screens/home/home_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -24,6 +27,7 @@ class LoginScreen extends StatelessWidget {
               ),
               const SizedBox(height: 30),
               const LoginForm(),
+              GoogleSignInButton(),
             ],
           ),
         ),
@@ -129,6 +133,57 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 }
+
+
+class GoogleSignInButton extends StatelessWidget {
+  const GoogleSignInButton({super.key});
+
+  Future<void> signInWithGoogle(BuildContext context) async {
+    try {
+      // await GoogleSignIn().signOut();
+      // await FirebaseAuth.instance.signOut();
+
+      final GoogleSignInAccount? googleUser =
+          await GoogleSignIn().signIn();
+
+      if (googleUser == null) return;
+
+      final googleAuth = await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
+    } catch (e) {
+      debugPrint("Google Sign-In error: $e");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+      onPressed: () => signInWithGoogle(context),
+      child: const Text("Continue with Google"),
+    );
+  }
+}
+
+
+
+
 
 // class _LoginFormState extends State<LoginForm> {
 //   final _usernameController = TextEditingController();

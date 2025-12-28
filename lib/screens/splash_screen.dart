@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_lab_1/screens/google_sign_in.dart';
-import 'package:flutter_lab_1/screens/home_screen.dart';
+import 'package:flutter_lab_1/screens/home/home_screen.dart';
 import 'package:flutter_lab_1/screens/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -29,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
        Navigator.pushReplacement(
         context,
         // for testing purpose
-        // MaterialPageRoute(builder: (_) => const GoogleSignInPage()),
+        // MaterialPageRoute(builder: (_) => const LoginScreen()),
         MaterialPageRoute(builder: (_) => const HomeScreen()),
       );
 
@@ -37,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
         // ❌ Not logged in
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const GoogleSignInPage()),
+          MaterialPageRoute(builder: (_) => const LoginScreen()),
         );
       }
     });

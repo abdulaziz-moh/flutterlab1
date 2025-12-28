@@ -1,5 +1,30 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
+import 'package:flutter_lab_1/screens/profile/profile_screen.dart';
+
+const Color facebookBlue = Color(0xFF1877F2);
+const Color facebookGrey = Color(0xFFF0F2F5);
+const Color facebookWhite = Color(0xFFFFFFFF);
+
+/// --------------------
+/// Dummy Data Model
+/// --------------------
+class Post {
+  final String userName;
+  final String time;
+  final String content;
+  final String imageUrl;
+  final int likes;
+  final int comments;
+
+  Post({
+    required this.userName,
+    required this.time,
+    required this.content,
+    required this.imageUrl,
+    required this.likes,
+    required this.comments,
+  });
+}
 
 /// Dummy posts list
 final List<Post> dummyPosts = [
@@ -70,142 +95,108 @@ final List<Post> dummyPosts = [
   ),
 ];
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
 
-  @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
+/// --------------------
+/// Home Screen
+/// --------------------
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
-class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          Padding(
-            padding: EdgeInsets.all(8),
-            child: Icon(Icons.search, size: 28),
-          ),
-        ],
+    return DefaultTabController(
+      length: 6,
+      child: Scaffold(
+        backgroundColor: facebookWhite,
+        appBar: _buildAppBar(),
+        body: const TabBarView(
+          children: [
+            _HomeFeed(),
+            Center(child: Text("Videos")),
+            Center(child: Text("Groups")),
+            Center(child: Text("Marketplace")),
+            Center(child: Text("Notifications")),
+            Center(child: Text("Profile")),
+          ],
+        ),
       ),
+    );
+  }
+}
 
-      body: ListView.builder(
-        itemCount: dummyPosts.length + 5, //personalPost
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            // return Padding(
-            //   padding: EdgeInsets.symmetric(vertical: 16),
-            //   child: Column(
-            //     children: [
-            //       Container(
-            //         height: 125,
-            //         color: Color.fromRGBO(220, 220, 220, 1),
-            //       ),
-            //       Container(height: 125, color: Colors.white),
-            //       Divider(),
-            //     ],
-            //   ),
-            // );
-
-            return Column(
-              children: [
-                Stack(
-                  alignment: Alignment.centerLeft,
-                  children: [
-                    // Container(height: 200, color: Colors.blue),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 125,
-                            color: Color.fromRGBO(220, 220, 220, 1),
-                          ),
-
-                          Container(height: 125, color: Colors.white),
-                          Divider(),
-                        ],
-                      ),
-                    ),
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Colors.grey,
-                      child: Icon(Icons.person, size: 50),
-                    ),
-                  ],
-                )
-              ],
-            );
-            
-          }
-          if (index == 1) return _buildStoriesBar();
-          if (index == 2) return _buildStatusInput();
-          if (index == 3) {
-            return Padding(
-              padding: EdgeInsets.all(16),
-              child: SizedBox(
-                width: double.infinity,
-                height: 50,
-
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromRGBO(220, 220, 220, 1),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  onPressed: () {},
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.post_add, color: Colors.black),
-                      SizedBox(width: 8),
-                      Text(
-                        "Manage posts",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }
-
-          if (index > 3 && index < dummyPosts.length + 4) {
-            return _buildPostCard(dummyPosts[index - 4]);
-          }
-          if (index == dummyPosts.length + 4) {
-            return Padding(
-              padding: EdgeInsets.all(16),
-              child: SizedBox(
-                width: double.infinity,
-                height: 50,
-
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 255, 0, 0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  onPressed: () {},
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.logout, color: Colors.black),
-                      SizedBox(width: 8),
-                      Text("Logout", style: TextStyle(color: Colors.black)),
-                    ],
-                  ),
-                ),
-              ),
-            );
-            return ListTile(leading: Icon(Icons.logout), title: Text("Logout"));
-          }
-          return null;
-        },
+/// --------------------
+/// AppBar + Tabs (NO animation)
+/// --------------------
+AppBar _buildAppBar() {
+  return AppBar(
+    backgroundColor: Colors.white,
+    // elevation: 1,
+    title: const Text(
+      "facebook",
+      style: TextStyle(
+        color: facebookBlue,
+        fontSize: 28,
+        fontWeight: FontWeight.bold,
       ),
+    ),
+    actions: [
+      // const Icon(Icons.add_box_rounded, color: Colors.black, size: 28),
+      // const SizedBox(width: 10),
+      // const Icon(Icons.search, color: Colors.black, size: 28),
+      // const SizedBox(width: 10),
+      // const Icon(Icons.message, color: Colors.black, size: 28),
+      // const SizedBox(width: 10),
+
+      IconButton(
+        icon: const Icon(Icons.add_box_rounded, color: Colors.black, size: 28),
+        onPressed: () {},
+      ),
+      IconButton(
+        icon: const Icon(Icons.search, color: Colors.black, size: 28),
+        onPressed: () {},
+      ),
+      IconButton(
+        icon: const Icon(Icons.message, color: Colors.black, size: 28),
+        onPressed: () {},
+      ),
+    ],
+    bottom: const TabBar(
+      indicatorColor: facebookBlue,
+      indicatorWeight: 3,
+      labelColor: facebookBlue,
+      unselectedLabelColor: Colors.black,
+      tabs: [
+        Tab(icon: Icon(Icons.home, size: 28)),
+        Tab(icon: Icon(Icons.ondemand_video, size: 28)),
+        Tab(icon: Icon(Icons.people, size: 28)),
+        Tab(icon: Icon(Icons.storefront, size: 28)),
+        Tab(icon: Icon(Icons.notifications, size: 28)),
+        // Tab(icon: Icon(Icons.menu, size: 28)),
+        CircleAvatar(
+          backgroundColor: Colors.blueGrey,
+          backgroundImage: NetworkImage("https://picsum.photos/600/400?random=100"),
+          child: Icon(Icons.person, color: Colors.white ,size: 24)
+        ),
+      ],
+    ),
+  );
+}
+
+/// --------------------
+/// Home Feed (Separated Widget)
+/// --------------------
+class _HomeFeed extends StatelessWidget {
+  const _HomeFeed();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: dummyPosts.length + 2,
+      itemBuilder: (context, index) {
+        if (index == 0) return _buildStatusInput(context);
+        if (index == 1) return _buildStoriesBar();
+        return _buildPostCard(dummyPosts[index - 2]);
+      },
     );
   }
 }
@@ -213,25 +204,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
 /// --------------------
 /// Status Input
 /// --------------------
-Widget _buildStatusInput() {
+Widget _buildStatusInput(BuildContext context) {
   return Container(
     color: Colors.white,
     padding: const EdgeInsets.all(10),
     child: Row(
       children: [
-        const CircleAvatar(
-          backgroundColor: Colors.blueGrey,
-          backgroundImage: NetworkImage(
-            "https://picsum.photos/600/400?random=100",
+        InkWell(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => ProfileScreen()),
           ),
-          // child: Image.network(
-          //   "https://picsum.photos/600/400?random=1",
-          //   height: 110,
-          //   width: 100,
-          //   fit:BoxFit.fill,
-          //   ),
-
-          // Icon(Icons.person, color: Colors.white),
+          child: CircleAvatar(
+            backgroundColor: Colors.blueGrey,
+            backgroundImage: NetworkImage("https://picsum.photos/600/400?random=100"),
+          ),
         ),
         const SizedBox(width: 10),
         Expanded(
